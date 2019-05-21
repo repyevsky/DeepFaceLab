@@ -17,6 +17,10 @@ from interact import interact as io
 '''
 You can implement your own model. Check examples.
 '''
+import json
+with open("config.json") as f:
+    input_config = json.load(f)
+
 class ModelBase(object):
 
 
@@ -38,7 +42,7 @@ class ModelBase(object):
                 for idx, name in idxs_names_list:
                     io.log_info ("[%d] : %s" % (idx, name) )
 
-                device_args['force_gpu_idx'] = io.input_int("Which GPU idx to choose? ( skip: best GPU ) : ", -1, [ x[0] for x in idxs_names_list] )
+                device_args['force_gpu_idx'] = input_config['device']['force-gpu-idx']
         self.device_args = device_args
 
         self.device_config = nnlib.DeviceConfig(allow_growth=False, **self.device_args)
@@ -77,7 +81,8 @@ class ModelBase(object):
                 self.loss_history = model_data.get('loss_history', [])
                 self.sample_for_preview = model_data.get('sample_for_preview', None)
 
-        ask_override = self.is_training_mode and self.iter != 0 and io.input_in_time ("Press enter in 2 seconds to override model settings.", 5 if io.is_colab() else 2 )
+        ask_override = self.is_training_mode and self.iter != 0 \
+                       and input_config['model']['override_options']
 
         yn_str = {True:'y',False:'n'}
 
@@ -86,18 +91,18 @@ class ModelBase(object):
 
         if ask_write_preview_history and (self.iter == 0 or ask_override):
             default_write_preview_history = False if self.iter == 0 else self.options.get('write_preview_history',False)
-            self.options['write_preview_history'] = io.input_bool("Write preview history? (y/n ?:help skip:%s) : " % (yn_str[default_write_preview_history]) , default_write_preview_history, help_message="Preview history will be writed to <ModelName>_history folder.")
+            self.options['write_preview_history'] = False
         else:
             self.options['write_preview_history'] = self.options.get('write_preview_history', False)
 
         if (self.iter == 0 or ask_override) and self.options['write_preview_history'] and io.is_support_windows():
-            choose_preview_history = io.input_bool("Choose image for the preview history? (y/n skip:%s) : " % (yn_str[False]) , False)
+            choose_preview_history = False
         else:
             choose_preview_history = False
         
         if ask_target_iter:
             if (self.iter == 0 or ask_override):
-                self.options['target_iter'] = max(0, io.input_int("Target iteration (skip:unlimited/default) : ", 0))
+                self.options['target_iter'] = input_config['model']['target_iter']
             else:
                 self.options['target_iter'] = max(model_data.get('target_iter',0), self.options.get('target_epoch',0))
                 if 'target_epoch' in self.options:
@@ -105,26 +110,26 @@ class ModelBase(object):
 
         if ask_batch_size and (self.iter == 0 or ask_override):
             default_batch_size = 0 if self.iter == 0 else self.options.get('batch_size',0)
-            self.options['batch_size'] = max(0, io.input_int("Batch_size (?:help skip:%d) : " % (default_batch_size), default_batch_size, help_message="Larger batch size is better for NN's generalization, but it can cause Out of Memory error. Tune this value for your videocard manually."))
+            self.options['batch_size'] = input_config['model']['batch_size']
         else:
             self.options['batch_size'] = self.options.get('batch_size', 0)
 
         if ask_sort_by_yaw:            
             if (self.iter == 0 or ask_override):
                 default_sort_by_yaw = self.options.get('sort_by_yaw', False)
-                self.options['sort_by_yaw'] = io.input_bool("Feed faces to network sorted by yaw? (y/n ?:help skip:%s) : " % (yn_str[default_sort_by_yaw]), default_sort_by_yaw, help_message="NN will not learn src face directions that don't match dst face directions. Do not use if the dst face has hair that covers the jaw." )
+                self.options['sort_by_yaw'] = input_config['model']['sort_by_yaw']
             else:
                 self.options['sort_by_yaw'] = self.options.get('sort_by_yaw', False)
 
         if ask_random_flip:
             if (self.iter == 0):
-                self.options['random_flip'] = io.input_bool("Flip faces randomly? (y/n ?:help skip:y) : ", True, help_message="Predicted face will look more naturally without this option, but src faceset should cover all face directions as dst faceset.")
+                self.options['random_flip'] = input_config['model']['horizontal_flip']
             else:
                 self.options['random_flip'] = self.options.get('random_flip', True)
 
         if ask_src_scale_mod:
             if (self.iter == 0):
-                self.options['src_scale_mod'] = np.clip( io.input_int("Src face scale modifier % ( -30...30, ?:help skip:0) : ", 0, help_message="If src face shape is wider than dst, try to decrease this value to get a better result."), -30, 30)
+                self.options['src_scale_mod'] = input_config['model']['src_face_scale_modifier']
             else:
                 self.options['src_scale_mod'] = self.options.get('src_scale_mod', 0)
 
