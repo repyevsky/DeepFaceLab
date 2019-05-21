@@ -79,7 +79,7 @@ if __name__ == "__main__":
     multiprocessing.set_start_method("spawn")
     os.nice(20)
 
-    if os.path.isfile('config.py'):
+    if os.path.isfile('config.json'):
         import json
         config = json.load(open("config.json"))
         for video in ['src', 'dst']:
@@ -122,8 +122,8 @@ if __name__ == "__main__":
             print('Output directory {} already exists.\
                    Skipping face detection.'.format(arguments['output-dir']))
 
-    # from mainscripts import Trainer
-    # Trainer.main(train_config, device_config)
+    from mainscripts import Trainer
+    Trainer.main(train_config, device_config)
 
     from mainscripts import Converter
     Converter.main(convert_config, device_config)

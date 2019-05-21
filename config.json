@@ -1,7 +1,7 @@
 {"model":
     {"override_options": false,
      "target_iter": 100,
-     "batch_size": 2,
+     "batch_size": 4,
      "sort_by_yaw": false,
      "horizontal_flip": true,
      "src_face_scale_modifier": 0,
@@ -53,5 +53,5 @@
     {"model_name": "SAE_CONFIG",
      "execute_programs": []},
  "device":
-    {"cpu-only": true,
+    {"cpu-only": false,
      "force-gpu-idx": -1}}
