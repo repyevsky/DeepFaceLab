@@ -20,6 +20,19 @@
      "bg_style_power": 0.0,
      "apply_random_ct": false,
      "pretrain": false},
+ "convertor":
+    {"mode": 1,
+     "hist_match": false,
+     "hist_match_threshold": 255,
+     "raw_mode_variation": 2,
+     "mask": 2,
+     "erode_mask": 0,
+     "blur_mask": 0,
+     "output_scale": 0,
+     "color": "none",
+     "super_resolution": false,
+     "degrade_color": 0,
+     "export_png": false},
  "frames":
     {"dst":
         {"output-ext": "jpg",

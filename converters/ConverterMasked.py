@@ -12,6 +12,9 @@ from utils.pickle_utils import AntiPickler
 
 from .Converter import Converter
 
+import json
+with open('config.json') as f:
+    input_config = json.load(f)['convertor']
 
 '''
 default_mode = {1:'overlay',
@@ -51,7 +54,7 @@ class ConverterMasked(Converter):
         self.face_type = face_type
         self.clip_hborder_mask_per = clip_hborder_mask_per
 
-        mode = io.input_int ("Choose mode: (1) overlay, (2) hist match, (3) hist match bw, (4) seamless, (5) raw. Default - %d : " % (default_mode) , default_mode)
+        mode = input_config['mode']
 
         mode_dict = {1:'overlay',
                      2:'hist-match',
@@ -62,7 +65,7 @@ class ConverterMasked(Converter):
         self.mode = mode_dict.get (mode, mode_dict[default_mode] )
 
         if self.mode == 'raw':
-            mode = io.input_int ("Choose raw mode: (1) rgb, (2) rgb+mask (default), (3) mask only, (4) predicted only : ", 2)
+            mode = input_config['raw_mode_variation']
             self.raw_mode = {1:'rgb',
                              2:'rgb-mask',
                              3:'mask-only',
@@ -71,40 +74,40 @@ class ConverterMasked(Converter):
         if self.mode != 'raw':
 
             if self.mode == 'seamless':
-                if io.input_bool("Seamless hist match? (y/n skip:n) : ", False):
+                if input_config['hist_match']:
                     self.mode = 'seamless-hist-match'
 
             if self.mode == 'hist-match' or self.mode == 'hist-match-bw':
-                self.masked_hist_match = io.input_bool("Masked hist match? (y/n skip:y) : ", True)
+                self.masked_hist_match = input_config['hist_match']
 
             if self.mode == 'hist-match' or self.mode == 'hist-match-bw' or self.mode == 'seamless-hist-match':
-                self.hist_match_threshold = np.clip ( io.input_int("Hist match threshold [0..255] (skip:255) :  ", 255), 0, 255)
+                self.hist_match_threshold = input_config['hist_match_threshold']
 
         if force_mask_mode != -1:
             self.mask_mode = force_mask_mode
         else:
             if face_type == FaceType.FULL:
-                self.mask_mode = np.clip ( io.input_int ("Mask mode: (1) learned, (2) dst, (3) FAN-prd, (4) FAN-dst , (5) FAN-prd*FAN-dst (6) learned*FAN-prd*FAN-dst (?) help. Default - %d : " % (1) , 1, help_message="If you learned mask, then option 1 should be choosed. 'dst' mask is raw shaky mask from dst aligned images. 'FAN-prd' - using super smooth mask by pretrained FAN-model from predicted face. 'FAN-dst' - using super smooth mask by pretrained FAN-model from dst face. 'FAN-prd*FAN-dst' or 'learned*FAN-prd*FAN-dst' - using multiplied masks."), 1, 6 )
+                self.mask_mode = input_config['mask']
             else:
-                self.mask_mode = np.clip ( io.input_int ("Mask mode: (1) learned, (2) dst . Default - %d : " % (1) , 1), 1, 2 )
+                self.mask_mode = input_config['mask']
 
         if self.mask_mode >= 3 and self.mask_mode <= 6:
             self.fan_seg = None
 
         if self.mode != 'raw':
-            self.erode_mask_modifier = base_erode_mask_modifier + np.clip ( io.input_int ("Choose erode mask modifier [-200..200] (skip:%d) : " % (default_erode_mask_modifier), default_erode_mask_modifier), -200, 200)
-            self.blur_mask_modifier = base_blur_mask_modifier + np.clip ( io.input_int ("Choose blur mask modifier [-200..200] (skip:%d) : " % (default_blur_mask_modifier), default_blur_mask_modifier), -200, 200)
+            self.erode_mask_modifier = input_config['erode_mask']
+            self.blur_mask_modifier = base_blur_mask_modifier + input_config['blur_mask']
 
-        self.output_face_scale = np.clip ( 1.0 + io.input_int ("Choose output face scale modifier [-50..50] (skip:0) : ", 0)*0.01, 0.5, 1.5)
-
-        if self.mode != 'raw':
-            self.color_transfer_mode = io.input_str ("Apply color transfer to predicted face? Choose mode ( rct/lct skip:None ) : ", None, ['rct','lct'])
-
-        self.super_resolution = io.input_bool("Apply super resolution? (y/n ?:help skip:n) : ", False, help_message="Enhance details by applying DCSCN network.")
+        self.output_face_scale = np.clip ( 1.0 + input_config['output_scale']*0.01, 0.5, 1.5)
 
         if self.mode != 'raw':
-            self.final_image_color_degrade_power = np.clip (  io.input_int ("Degrade color power of final image [0..100] (skip:0) : ", 0), 0, 100)
-            self.alpha = io.input_bool("Export png with alpha channel? (y/n skip:n) : ", False)
+            self.color_transfer_mode = None if input_config['color'] == 'none' else input_config['color']
+
+        self.super_resolution = input_config['super_resolution']
+
+        if self.mode != 'raw':
+            self.final_image_color_degrade_power = input_config['degrade_color']
+            self.alpha = input_config['export_png']
 
         io.log_info ("")
 

@@ -60,6 +60,16 @@ train_config = {
     'execute_programs': list(),
 }
 
+convert_config = {
+    'input_dir': 'workspace/data_dst',
+    'output_dir': 'workspace/merged',
+    'aligned_dir': 'workspace/data_dst/aligned',
+    'avaperator_aligned_dir': None,
+    'model_dir': 'workspace/model',
+    'model_name': train_config['model_name'],
+    'debug': False,
+}
+
 device_config = {
     'cpu-only': False,
     'force-gpu-idx': -1,
@@ -112,8 +122,11 @@ if __name__ == "__main__":
             print('Output directory {} already exists.\
                    Skipping face detection.'.format(arguments['output-dir']))
 
-    from mainscripts import Trainer
-    Trainer.main(train_config, device_config)
+    # from mainscripts import Trainer
+    # Trainer.main(train_config, device_config)
+
+    from mainscripts import Converter
+    Converter.main(convert_config, device_config)
 
 #     pickle.dumps(model_data)
 
