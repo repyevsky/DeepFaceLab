@@ -1,0 +1,44 @@
+{"model":
+    {"override_options": false,
+     "target_iter": 100,
+     "batch_size": 2,
+     "sort_by_yaw": false,
+     "horizontal_flip": true,
+     "src_face_scale_modifier": 0,
+     "resolution": 128,
+     "face_type": "f",
+     "learn_mask": true,
+     "optimizer_mode": 1,
+     "archi": "df",
+     "ae_dims": 256,
+     "e_ch_dims": 42,
+     "d_ch_dims": 21,
+     "multiscale_decoder": false,
+     "ca_weights": false,
+     "pixel_loss": false,
+     "face_style_power": 0.0,
+     "bg_style_power": 0.0,
+     "apply_random_ct": false,
+     "pretrain": false},
+ "frames":
+    {"dst":
+        {"output-ext": "jpg",
+         "fps": 0},
+     "src":
+        {"output-ext": "jpg",
+         "fps": 0}},
+ "faces":
+    {"dst":
+        {"face-type": "full_face",
+         "detector": "s3fd",
+         "multi-gpu": false},
+     "src":
+        {"face-type": "full_face",
+         "detector": "s3fd",
+         "multi-gpu": false}},
+ "train":
+    {"model_name": "SAE_CONFIG",
+     "execute_programs": []},
+ "device":
+    {"cpu-only": true,
+     "force-gpu-idx": -1}}
