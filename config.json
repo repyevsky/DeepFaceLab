@@ -50,7 +50,7 @@
          "detector": "s3fd",
          "multi-gpu": false}},
  "train":
-    {"model_name": "SAE_CONFIG",
+    {"model_name": "SAE",
      "execute_programs": []},
  "device":
     {"cpu-only": false,

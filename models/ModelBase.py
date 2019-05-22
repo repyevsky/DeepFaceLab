@@ -104,9 +104,7 @@ class ModelBase(object):
             if (self.iter == 0 or ask_override):
                 self.options['target_iter'] = input_config['model']['target_iter']
             else:
-                self.options['target_iter'] = max(model_data.get('target_iter',0), self.options.get('target_epoch',0))
-                if 'target_epoch' in self.options:
-                    self.options.pop('target_epoch')
+                self.options['target_iter'] = model_data['options'].get('target_iter')
 
         if ask_batch_size and (self.iter == 0 or ask_override):
             default_batch_size = 0 if self.iter == 0 else self.options.get('batch_size',0)
@@ -153,6 +151,7 @@ class ModelBase(object):
 
         nnlib.import_all(self.device_config)
         self.keras = nnlib.keras
+        print(self.keras)
         self.K = nnlib.keras.backend
 
         self.onInitialize()

@@ -54,20 +54,10 @@ train_config = {
     'training_data_dst_dir': 'workspace/data_dst/aligned',
     'pretraining_data_dir': None,
     'model_path': 'workspace/model',
-    'model_name': 'SAE_CONFIG',
+    'model_name': 'SAE',
     'no_preview': True,
     'debug': False,
     'execute_programs': list(),
-}
-
-convert_config = {
-    'input_dir': 'workspace/data_dst',
-    'output_dir': 'workspace/merged',
-    'aligned_dir': 'workspace/data_dst/aligned',
-    'avaperator_aligned_dir': None,
-    'model_dir': 'workspace/model',
-    'model_name': train_config['model_name'],
-    'debug': False,
 }
 
 device_config = {
@@ -124,13 +114,3 @@ if __name__ == "__main__":
 
     from mainscripts import Trainer
     Trainer.main(train_config, device_config)
-
-    from mainscripts import Converter
-    Converter.main(convert_config, device_config)
-
-#     pickle.dumps(model_data)
-
-# >>> data["options"]
-# {'batch_size': 24, 'sort_by_yaw': False, 'random_flip': True, 'pixel_loss': False}
-# >>> data.keys()
-# dict_keys(['iter', 'options', 'loss_history', 'sample_for_preview'])
