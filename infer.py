@@ -30,8 +30,17 @@ if __name__ == "__main__":
         device_config.update(config['device'])
 
     from mainscripts import Converter
-    device_config['cpu-only'] = True
     Converter.main(convert_config, device_config)
+
+    from mainscripts import VideoEd
+    VideoEd.video_from_sequence (
+        'workspace/merged',
+        'workspace/result.mp4',
+        reference_file='workspace/data_dst.mp4',
+        ext='png',
+        fps=None,
+        bitrate=16,
+        lossless=False)
 
     print ("Done.")
 
