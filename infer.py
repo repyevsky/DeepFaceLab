@@ -11,7 +11,7 @@ convert_config = {
     'aligned_dir': 'workspace/data_dst/aligned',
     'avaperator_aligned_dir': None,
     'model_dir': 'workspace/model',
-    'model_name': train_config['model_name'],
+    'model_name': 'SAE',
     'debug': False,
 }
 
