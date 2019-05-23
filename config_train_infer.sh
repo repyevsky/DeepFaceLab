@@ -1,3 +1,3 @@
-cp workspace/config.json ./ &
-python train.py &
+cp workspace/config.json ./
+python train.py
 python infer.py 
