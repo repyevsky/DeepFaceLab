@@ -1,6 +1,6 @@
 {"model":
-    {"override_options": false,
-     "target_iter": 100,
+    {"override_options": true,
+     "target_iter": 1000,
      "batch_size": 4,
      "sort_by_yaw": false,
      "horizontal_flip": true,
