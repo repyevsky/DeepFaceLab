@@ -35,7 +35,7 @@ if __name__ == "__main__":
     from mainscripts import VideoEd
     VideoEd.video_from_sequence (
         'workspace/merged',
-        'workspace/result.mp4',
+        'workspace/temp.mp4',
         reference_file='workspace/data_dst.mp4',
         ext='png',
         fps=None,
